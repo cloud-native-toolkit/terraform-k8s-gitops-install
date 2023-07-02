@@ -20,7 +20,7 @@ variable "operator_namespace" {
 
 variable "gitops_namespace" {
   type        = string
-  description = "Namespace where OpenShift GitOps will be installed"
+  description = "Namespace where ArgoCD will be installed"
   default     = ""
 }
 

@@ -44,7 +44,7 @@ This module makes use of the output from other modules:
 
 ```hcl-terraform
 module "gitops_install" {
-  source = "github.com/ibm-garage-cloud/terraform-k8s-gitops-install.git"
+  source = "github.com/cloud-native-toolkit/terraform-k8s-gitops-install.git"
 
   cluster_type        = module.cluster.platform.type_code
   ingress_subdomain   = module.cluster.platform.ingress
