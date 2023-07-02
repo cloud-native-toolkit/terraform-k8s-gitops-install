@@ -1,12 +1,13 @@
-name: openshift-cicd
+name: gitops-install
 type: terraform
-description: Module to provision Tekton and ArgoCD into an OpenShift cluster together
+description: Module to provision ArgoCD and KubeSeal into an OpenShift cluster together
 interfaces:
   - github.com/cloud-native-toolkit/automation-modules#tekton
 tags:
     - tools
     - devops
-    - tekton
+    - kubeseal
+    - sealed secrets
     - argocd
 versions:
 - platforms:

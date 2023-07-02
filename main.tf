@@ -48,17 +48,6 @@ resource null_resource namespaces {
   }
 }
 
-module "pipelines" {
-  source = "github.com/cloud-native-toolkit/terraform-tools-tekton.git?ref=v3.1.1"
-  depends_on = [null_resource.namespaces]
-
-  cluster_config_file_path = var.cluster_config_file
-  cluster_ingress_hostname = var.ingress_subdomain
-  olm_namespace            = var.olm_namespace
-  operator_namespace       = module.gitops.operator_namespace
-  provision                = module.gitops.provision_tekton
-}
-
 module "sealed_secrets" {
   source = "github.com/cloud-native-toolkit/terraform-tools-sealed-secrets.git?ref=v1.2.1"
   depends_on = [null_resource.namespaces]

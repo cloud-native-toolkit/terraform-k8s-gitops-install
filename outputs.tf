@@ -1,14 +1,13 @@
 
 output "operator_namespace" {
   description = "The namespace where the operators were deployed"
-  value       = module.pipelines.operator_namespace
+  value       = module.gitops.operator_namespace
 }
 
 output "operator_names" {
   description = "The namespace where the operators were deployed"
   value       = [
     module.gitops.operator_name,
-    module.pipelines.operator_name
   ]
 }
 
@@ -56,8 +55,4 @@ output "sealed_secrets_cert" {
 
 output "sealed_secrets_namespace" {
   value = module.sealed_secrets.namespace
-}
-
-output "tekton_namespace" {
-  value = module.pipelines.namespace
 }

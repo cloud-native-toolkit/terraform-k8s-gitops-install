@@ -1,10 +1,7 @@
 # Openshift CI/CD module
 
-Module that provisions ArgoCD and Tekton into a cluster. The OpenShift GitOps release of the ArgoCD operator has made the OpenShift Pipelines operator (Tekton) a dependency and will automatically provision the operator if not present. Since the two operators are entangled by the OpenShift GitOps operator, they have been combined here.
-
-If the OpenShift GitOps operator has been deployed (OpenShift 4.6+) then Tekton will have been automatically provisioned and the Tekton module logic will be skipped (the `provision_tekton` flag from the ArgoCD module will be false). Otherwise, the Tekton operator will be installed after the ArgoCD operator.
-
-The presence of the Tekton operator does not preclude the use of other CI tools within the OpenShift cluster.
+Module that prepares a cluster for GitOps by installing ArgoCD and KubeSeal via submodules. Both of the submodules
+support installation on either OpenShift or vanilla Kubernetes.
 
 ## Software dependencies
 
@@ -12,7 +9,7 @@ The module depends on the following software components:
 
 ### Command-line tools
 
-- terraform - v13
+- terraform - v0.15
 
 ### Terraform providers
 
@@ -21,7 +18,7 @@ The module depends on the following software components:
 ### Submodules
 
 - ArgoCD module - github.com/cloud-native-toolkit/terraform-tools-argocd
-- Tekton module - github.com/cloud-native-toolkit/terraform-tools-tekton
+- KubeSeal module - github.com/cloud-native-toolkit/terraform-tools-sealed-secrets.git
 
 ## Module dependencies
 
@@ -29,19 +26,20 @@ This module makes use of the output from other modules:
 
 - Cluster
 - OLM
+- Sealed Secret Cert
 
 ## Example usage
 
 ```hcl-terraform
-module "openshift_cicd" {
-  source = "github.com/ibm-garage-cloud/terraform-tools-openshift-cicd.git"
+module "gitops_install" {
+  source = "github.com/ibm-garage-cloud/terraform-k8s-gitops-install.git"
 
-  cluster_type        = module.dev_cluster.platform.type_code
-  ingress_subdomain   = module.dev_cluster.platform.ingress
-  cluster_config_file = module.dev_cluster.config_file_path
-  olm_namespace       = module.dev_capture_olm_state.namespace
-  operator_namespace  = module.dev_capture_operator_state.namespace
-  app_namespace       = module.dev_capture_tools_state.namespace
+  cluster_type        = module.cluster.platform.type_code
+  ingress_subdomain   = module.cluster.platform.ingress
+  tls_secret_name     = module.cluster.platform.tls_secret
+  cluster_config_file = module.cluster.config_file_path
+  olm_namespace       = module.olm.olm_namespace
+  operator_namespace  = module.olm.target_namespace
   sealed_secret_cert  = module.cert.cert
   sealed_secret_private_key = module.cert.private_key
 }
