@@ -1,0 +1,80 @@
+name: gitops-install
+type: terraform
+description: Module to provision ArgoCD and KubeSeal into an OpenShift cluster together
+tags:
+    - gitops
+    - kubeseal
+    - sealed secrets
+    - argocd
+versions:
+- platforms:
+    - kubernetes
+    - ocp4
+  providers:
+    - name: clis
+      source: "cloud-native-toolkit/clis"
+  dependencies:
+    - id: cluster
+      interface: github.com/cloud-native-toolkit/automation-modules#cluster
+      refs: []
+    - id: olm
+      refs:
+        - source: github.com/ibm-garage-cloud/terraform-k8s-olm
+          version: ">= 1.2.2"
+    - id: gitops_namespace
+      discriminator: openshift-gitops
+      refs:
+        - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
+          version: ">= 2.1.0"
+    - id: sealed_secret_namespace
+      discriminator: sealed-secret
+      refs:
+        - source: github.com/ibm-garage-cloud/terraform-k8s-namespace
+          version: ">= 2.1.0"
+    - id: cert
+      refs:
+        - source: github.com/cloud-native-toolkit/terraform-util-sealed-secret-cert
+          version: ">= 0.0.0"
+  variables:
+    - name: cluster_type
+      moduleRef:
+        id: cluster
+        output: platform.type_code
+    - name: ingress_subdomain
+      moduleRef:
+        id: cluster
+        output: platform.ingress
+    - name: tls_secret_name
+      moduleRef:
+        id: cluster
+        output: platform.tls_secret
+    - name: cluster_config_file
+      moduleRef:
+        id: cluster
+        output: config_file_path
+    - name: olm_namespace
+      moduleRef:
+        id: olm
+        output: olm_namespace
+    - name: operator_namespace
+      moduleRef:
+        id: olm
+        output: target_namespace
+    - name: gitops_namespace
+      moduleRef:
+        id: gitops_namespace
+        output: name
+      value: openshift-gitops
+    - name: sealed_secret_namespace
+      moduleRef:
+        id: sealed_secret_namespace
+        output: name
+      value: sealed-secrets
+    - name: sealed_secret_cert
+      moduleRef:
+        id: cert
+        output: cert
+    - name: sealed_secret_private_key
+      moduleRef:
+        id: cert
+        output: private_key
