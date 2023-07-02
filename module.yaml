@@ -2,8 +2,7 @@ name: gitops-install
 type: terraform
 description: Module to provision ArgoCD and KubeSeal into an OpenShift cluster together
 tags:
-    - tools
-    - devops
+    - gitops
     - kubeseal
     - sealed secrets
     - argocd
