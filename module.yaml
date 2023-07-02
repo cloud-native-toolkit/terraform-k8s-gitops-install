@@ -1,8 +1,6 @@
 name: gitops-install
 type: terraform
 description: Module to provision ArgoCD and KubeSeal into an OpenShift cluster together
-interfaces:
-  - github.com/cloud-native-toolkit/automation-modules#tekton
 tags:
     - tools
     - devops
